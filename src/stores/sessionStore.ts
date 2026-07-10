@@ -17,6 +17,7 @@ export interface AnswerLogEntry {
 interface SessionState {
   status: SessionStatus;
   config: QuestionConfig | null;
+  durationMs: number | null;
   questionLimit: number | null; // null = unlimited
   endsAt: number | null; // epoch ms
   currentQuestion: Question | null;
@@ -39,6 +40,7 @@ function nextQuestion(config: QuestionConfig): { question: Question; shownAt: nu
 export const useSessionStore = create<SessionState>((set, get) => ({
   status: "idle",
   config: null,
+  durationMs: null,
   questionLimit: null,
   endsAt: null,
   currentQuestion: null,
@@ -51,6 +53,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     set({
       status: "running",
       config,
+      durationMs,
       questionLimit,
       endsAt: Date.now() + durationMs,
       currentQuestion: question,
@@ -93,6 +96,8 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       id: crypto.randomUUID(),
       completedAt: new Date().toISOString(),
       config: state.config as QuestionConfig,
+      durationMs: state.durationMs as number,
+      questionLimit: state.questionLimit,
       ...summary,
     };
 
@@ -104,6 +109,7 @@ export const useSessionStore = create<SessionState>((set, get) => ({
     set({
       status: "idle",
       config: null,
+      durationMs: null,
       questionLimit: null,
       endsAt: null,
       currentQuestion: null,

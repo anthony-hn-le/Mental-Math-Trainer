@@ -4,6 +4,8 @@ export interface SessionResult {
   id: string;
   completedAt: string; // ISO timestamp
   config: QuestionConfig;
+  durationMs: number;
+  questionLimit: number | null;
   score: number;
   correctCount: number;
   totalCount: number;

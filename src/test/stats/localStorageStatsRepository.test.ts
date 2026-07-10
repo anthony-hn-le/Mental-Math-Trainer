@@ -20,6 +20,8 @@ function makeSession(overrides: Partial<SessionResult> = {}): SessionResult {
     id: crypto.randomUUID(),
     completedAt: new Date().toISOString(),
     config: { activeOperations: ["integer-add-sub"], questionType: "open" },
+    durationMs: 60_000,
+    questionLimit: null,
     score: 8,
     correctCount: 8,
     totalCount: 10,
