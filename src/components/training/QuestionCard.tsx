@@ -11,7 +11,11 @@ export function QuestionCard({ question }: QuestionCardProps) {
   return (
     <Card>
       <CardContent className="flex flex-col items-center gap-6 py-10">
-        <span className="text-center font-mono text-4xl font-semibold tracking-tight sm:text-5xl">
+        <span
+          role="status"
+          aria-live="polite"
+          className="text-center font-mono text-4xl font-semibold tracking-tight sm:text-5xl"
+        >
           {question.prompt}
         </span>
         <div className="w-full max-w-sm">

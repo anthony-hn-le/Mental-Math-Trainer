@@ -50,6 +50,7 @@ export function MCQAnswerInput({ question }: MCQAnswerInputProps) {
             size="lg"
             disabled={selectedIndex !== null}
             onClick={() => handleSelect(index)}
+            aria-label={`Option ${index + 1}: ${choice}`}
             className={cn(
               "h-14 justify-between font-mono text-lg",
               showFeedback && isCorrect && "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400",

@@ -16,6 +16,7 @@ export function OpenAnswerInput({ question }: OpenAnswerInputProps) {
   return (
     <Input
       autoFocus
+      aria-label="Your answer"
       placeholder="Type your answer"
       className="h-14 text-center font-mono text-2xl"
       onChange={(e) => {
