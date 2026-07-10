@@ -2,7 +2,7 @@
 
 # Project: Mental Math Trainer
 
-Tradermath-inspired mental arithmetic trainer for quant/trading-interview-style drills. Standalone project — not part of the `portfolio/` repo; will be linked from it later via `liveUrl` in `portfolio/src/data/projects.ts` once deployed.
+Tradermath-inspired mental arithmetic trainer for quant/trading-interview-style drills. Standalone project — not part of the `portfolio/` repo. Live at https://mental-math-trainer-dun.vercel.app/, GitHub `anthony-hn-le/Mental-Math-Trainer` — not yet linked from `portfolio/src/data/projects.ts`.
 
 ## Stack (as actually installed)
 - Next.js 16.2.10, App Router, React 19.2.4, TypeScript ^5
@@ -20,7 +20,8 @@ This build ships a fully working trainer with **no authentication** — all stat
 The seam for that future work is `src/lib/stats/statsRepository.ts` — a `StatsRepository` interface (`recordSession`, `getLastSession`, `getActivity`, `getLifetimeStats`) that `src/lib/stats/localStorageStatsRepository.ts` implements for guest mode. `src/stores/statsStore.ts` only depends on this interface, never on `localStorage` directly — a future DB-backed implementation (behind an API route, once a logged-in user exists) can drop in without touching any UI component.
 
 ## Key design decisions
-- **Session end rule**: Duration (1/10 min) and Question Count (20–120 or ∞) both apply simultaneously — the session ends at whichever limit is hit first. See `src/stores/sessionStore.ts`'s `tick()`.
+- **Session end rule**: Duration (1-10 min, a slider) and Question Count (20–120 or ∞) both apply simultaneously — the session ends at whichever limit is hit first. See `src/stores/sessionStore.ts`'s `tick()`.
+- **3-second countdown**: `sessionStore` has a `"countdown"` status between `"idle"` and `"running"` — `startSession()` pre-generates the first question and enters `"countdown"` but does *not* start the clock (`endsAt` stays `null`); `CountdownOverlay.tsx` ticks 3→2→1 locally then calls `beginRunning()`, which starts `endsAt` and resets `questionShownAt` (so the countdown itself is never counted as the first question's response time).
 - **Fraction answers** must always be reduced, improper-form strings (`8/3` not `2 2/3`; `1/3` not `6/18`) — enforced by `src/lib/mathEngine/fraction.ts`'s `Fraction` class (always reduced by construction) and `checkAnswer.ts`'s strict parsing.
 - **Subtraction never goes negative** — both integer and fraction subtraction generators swap operands to keep the result ≥ 0. One-line change in the relevant generator if negative results are ever wanted.
 - **Decimal arithmetic uses scaled integers**, not `parseFloat`, to avoid float drift (`0.1 + 0.2` style bugs) — see `src/lib/mathEngine/decimalUtils.ts`.
@@ -41,4 +42,4 @@ The seam for that future work is `src/lib/stats/statsRepository.ts` — a `Stats
 
 ## Known gaps / placeholders
 - No auth, no DB — see "Scope" above.
-- Not yet linked from `portfolio/src/data/projects.ts` — add `liveUrl`/`githubUrl` there once deployed.
+- Not yet linked from `portfolio/src/data/projects.ts` — add `liveUrl`/`githubUrl` there.

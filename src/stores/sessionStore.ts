@@ -5,7 +5,7 @@ import { summarizeSession } from "@/lib/stats/scoring";
 import type { SessionResult } from "@/lib/stats/types";
 import { useStatsStore } from "./statsStore";
 
-export type SessionStatus = "idle" | "running" | "finished";
+export type SessionStatus = "idle" | "countdown" | "running" | "finished";
 
 export interface AnswerLogEntry {
   question: Question;
@@ -25,7 +25,10 @@ interface SessionState {
   answeredLog: AnswerLogEntry[];
   result: SessionResult | null;
 
+  /** Enters the "countdown" phase — the actual timer/limit only starts once beginRunning() fires. */
   startSession: (config: QuestionConfig, durationMs: number, questionLimit: number | null) => void;
+  /** Transitions countdown -> running, starting the real clock. */
+  beginRunning: () => void;
   submitAnswer: (userInput: string) => void;
   /** Checks the "whichever limit is hit first" rule; call on a ~200ms interval while running. */
   tick: () => void;
@@ -51,16 +54,24 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   startSession: (config, durationMs, questionLimit) => {
     const { question, shownAt } = nextQuestion(config);
     set({
-      status: "running",
+      status: "countdown",
       config,
       durationMs,
       questionLimit,
-      endsAt: Date.now() + durationMs,
+      endsAt: null,
       currentQuestion: question,
       questionShownAt: shownAt,
       answeredLog: [],
       result: null,
     });
+  },
+
+  beginRunning: () => {
+    const state = get();
+    if (state.status !== "countdown" || state.durationMs === null) return;
+    // The question was pre-generated during the countdown; restart its timer
+    // now so the countdown itself isn't counted as response time.
+    set({ status: "running", endsAt: Date.now() + state.durationMs, questionShownAt: performance.now() });
   },
 
   submitAnswer: (userInput: string) => {

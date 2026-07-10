@@ -37,7 +37,7 @@ export function MCQAnswerInput({ question }: MCQAnswerInputProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+    <div className="flex gap-2">
       {choices.map((choice, index) => {
         const isSelected = selectedIndex === index;
         const isCorrect = choice === question.answer;
@@ -52,13 +52,13 @@ export function MCQAnswerInput({ question }: MCQAnswerInputProps) {
             onClick={() => handleSelect(index)}
             aria-label={`Option ${index + 1}: ${choice}`}
             className={cn(
-              "h-14 justify-between font-mono text-lg",
+              "relative h-16 flex-1 font-mono text-lg",
               showFeedback && isCorrect && "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400",
               showFeedback && isSelected && !isCorrect && "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400",
             )}
           >
-            <span>{choice}</span>
-            <span className="text-xs text-muted-foreground">{index + 1}</span>
+            {choice}
+            <span className="absolute right-1.5 bottom-1 text-[10px] text-muted-foreground">{index + 1}</span>
           </Button>
         );
       })}

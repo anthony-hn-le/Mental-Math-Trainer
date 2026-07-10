@@ -18,7 +18,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
         >
           {question.prompt}
         </span>
-        <div className="w-full max-w-sm">
+        <div className={question.choices ? "w-full max-w-xl" : "w-full max-w-sm"}>
           {question.choices ? (
             <MCQAnswerInput key={question.id} question={question} />
           ) : (

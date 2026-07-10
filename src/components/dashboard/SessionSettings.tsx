@@ -1,7 +1,8 @@
 "use client";
 
+import { Info } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { useConfigStore, type QuestionCountOption } from "@/stores/configStore";
 
 const QUESTION_COUNT_OPTIONS: { value: string; label: string; count: QuestionCountOption }[] = [
@@ -14,12 +15,15 @@ const QUESTION_COUNT_OPTIONS: { value: string; label: string; count: QuestionCou
   { value: "unlimited", label: "∞", count: null },
 ];
 
+const MCQ_CHOICE_OPTIONS = [3, 4, 5] as const;
+
 export function SessionSettings() {
-  const durationSeconds = useConfigStore((s) => s.durationSeconds);
+  const durationMinutes = useConfigStore((s) => s.durationMinutes);
   const questionCount = useConfigStore((s) => s.questionCount);
   const questionType = useConfigStore((s) => s.questionType);
   const mcqChoiceCount = useConfigStore((s) => s.mcqChoiceCount);
-  const setDuration = useConfigStore((s) => s.setDuration);
+  const numberTypes = useConfigStore((s) => s.numberTypes);
+  const setDurationMinutes = useConfigStore((s) => s.setDurationMinutes);
   const setQuestionCount = useConfigStore((s) => s.setQuestionCount);
   const setQuestionType = useConfigStore((s) => s.setQuestionType);
   const setMcqChoiceCount = useConfigStore((s) => s.setMcqChoiceCount);
@@ -29,21 +33,23 @@ export function SessionSettings() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Duration</h3>
-        <ToggleGroup
-          value={[`${durationSeconds}`]}
-          onValueChange={(values) => {
-            const next = values[0];
-            if (next === "60" || next === "600") setDuration(next === "60" ? 60 : 600);
-          }}
-        >
-          <ToggleGroupItem value="60" variant="outline" className="flex-1">
-            1 min
-          </ToggleGroupItem>
-          <ToggleGroupItem value="600" variant="outline" className="flex-1">
-            10 min
-          </ToggleGroupItem>
-        </ToggleGroup>
+        <div className="mb-2 flex items-baseline justify-between">
+          <h3 className="text-sm font-medium text-muted-foreground">Duration</h3>
+          <span className="font-mono text-sm font-semibold text-primary">
+            {durationMinutes} minute{durationMinutes === 1 ? "" : "s"}
+          </span>
+        </div>
+        <Slider
+          value={[durationMinutes]}
+          min={1}
+          max={10}
+          step={1}
+          onValueChange={(value) => setDurationMinutes(Array.isArray(value) ? value[0] : value)}
+        />
+        <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+          <span>1 min</span>
+          <span>10 min</span>
+        </div>
       </div>
 
       <div>
@@ -84,17 +90,35 @@ export function SessionSettings() {
 
       {questionType === "mcq" && (
         <div>
-          <h3 className="mb-2 text-sm font-medium text-muted-foreground">Choices</h3>
-          <Select value={`${mcqChoiceCount}`} onValueChange={(v) => setMcqChoiceCount(Number(v) as 3 | 4 | 5)}>
-            <SelectTrigger className="w-full">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="3">3 options</SelectItem>
-              <SelectItem value="4">4 options</SelectItem>
-              <SelectItem value="5">5 options</SelectItem>
-            </SelectContent>
-          </Select>
+          <h3 className="mb-2 text-sm font-medium text-muted-foreground">Answer Options</h3>
+          <ToggleGroup
+            value={[`${mcqChoiceCount}`]}
+            onValueChange={(values) => {
+              const next = Number(values[0]);
+              if (next === 3 || next === 4 || next === 5) setMcqChoiceCount(next);
+            }}
+          >
+            {MCQ_CHOICE_OPTIONS.map((count) => (
+              <ToggleGroupItem key={count} value={`${count}`} variant="outline" className="flex-1">
+                {count}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
+      )}
+
+      {questionType === "open" && numberTypes.fraction && (
+        <div className="flex gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3 text-sm text-blue-700 dark:text-blue-300">
+          <Info className="mt-0.5 size-4 shrink-0" />
+          <div>
+            <p className="font-medium">Fraction answer format</p>
+            <p className="mt-1 text-blue-700/90 dark:text-blue-300/90">
+              If your answer is a fraction, write it as a reduced improper fraction. Do not use mixed numbers
+              (e.g., instead of 2 2/3, write <code className="rounded bg-blue-500/15 px-1">8/3</code>). Always
+              reduce fractions to lowest terms (e.g., <code className="rounded bg-blue-500/15 px-1">6/18</code>{" "}
+              → <code className="rounded bg-blue-500/15 px-1">1/3</code>).
+            </p>
+          </div>
         </div>
       )}
     </div>

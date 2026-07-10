@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSessionStore } from "@/stores/sessionStore";
+import { CountdownOverlay } from "@/components/training/CountdownOverlay";
 import { SessionTimer } from "@/components/training/SessionTimer";
 import { QuestionCard } from "@/components/training/QuestionCard";
 import { SessionResultsScreen } from "@/components/training/SessionResultsScreen";
@@ -20,7 +21,8 @@ export default function TrainPage() {
   if (status === "idle") return null;
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
+    <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-stretch justify-center gap-6 px-4 py-8 sm:px-6">
+      {status === "countdown" && <CountdownOverlay />}
       {status === "running" && (
         <>
           <SessionTimer />

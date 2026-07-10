@@ -20,14 +20,15 @@ export interface NumberTypeToggles {
 interface ConfigState {
   operations: OperationToggles;
   numberTypes: NumberTypeToggles;
-  durationSeconds: 60 | 600;
+  /** 1-10 minutes. */
+  durationMinutes: number;
   questionCount: QuestionCountOption;
   questionType: QuestionType;
   mcqChoiceCount: 3 | 4 | 5;
 
   toggleOperation: (key: keyof OperationToggles) => void;
   toggleNumberType: (key: keyof NumberTypeToggles) => void;
-  setDuration: (seconds: 60 | 600) => void;
+  setDurationMinutes: (minutes: number) => void;
   setQuestionCount: (count: QuestionCountOption) => void;
   setQuestionType: (type: QuestionType) => void;
   setMcqChoiceCount: (count: 3 | 4 | 5) => void;
@@ -39,7 +40,7 @@ export const useConfigStore = create<ConfigState>()(
     (set, get) => ({
       operations: { add: true, subtract: true, multiply: true, divide: true },
       numberTypes: { integer: true, decimal: false, fraction: false },
-      durationSeconds: 60,
+      durationMinutes: 1,
       questionCount: null,
       questionType: "open",
       mcqChoiceCount: 4,
@@ -47,7 +48,7 @@ export const useConfigStore = create<ConfigState>()(
       toggleOperation: (key) => set((state) => ({ operations: { ...state.operations, [key]: !state.operations[key] } })),
       toggleNumberType: (key) =>
         set((state) => ({ numberTypes: { ...state.numberTypes, [key]: !state.numberTypes[key] } })),
-      setDuration: (seconds) => set({ durationSeconds: seconds }),
+      setDurationMinutes: (minutes) => set({ durationMinutes: minutes }),
       setQuestionCount: (count) => set({ questionCount: count }),
       setQuestionType: (type) => set({ questionType: type }),
       setMcqChoiceCount: (count) => set({ mcqChoiceCount: count }),
@@ -88,7 +89,7 @@ export const useConfigStore = create<ConfigState>()(
       partialize: (state) => ({
         operations: state.operations,
         numberTypes: state.numberTypes,
-        durationSeconds: state.durationSeconds,
+        durationMinutes: state.durationMinutes,
         questionCount: state.questionCount,
         questionType: state.questionType,
         mcqChoiceCount: state.mcqChoiceCount,

@@ -21,9 +21,9 @@ export function ActivityGrid() {
   const activity = useStatsStore((s) => s.activity);
   const hasHydrated = useStatsStore((s) => s.hasHydrated);
 
-  const weeks: { date: string; questionsAnswered: number }[][] = [];
+  const rows: { date: string; questionsAnswered: number }[][] = [];
   for (let i = 0; i < activity.length; i += 7) {
-    weeks.push(activity.slice(i, i + 7));
+    rows.push(activity.slice(i, i + 7));
   }
 
   return (
@@ -35,14 +35,14 @@ export function ActivityGrid() {
         {!hasHydrated || activity.length === 0 ? (
           <p className="text-xs text-muted-foreground">No practice sessions yet.</p>
         ) : (
-          <div className="flex gap-[3px] overflow-x-auto pb-1">
-            {weeks.map((week, i) => (
-              <div key={i} className="flex flex-col gap-[3px]">
-                {week.map((day) => (
+          <div className="flex flex-col gap-[6px]">
+            {rows.map((row, i) => (
+              <div key={i} className="flex gap-[6px]">
+                {row.map((day) => (
                   <div
                     key={day.date}
                     title={`${day.date}: ${day.questionsAnswered} question${day.questionsAnswered === 1 ? "" : "s"}`}
-                    className={`size-[10px] shrink-0 rounded-[2px] ${LEVEL_CLASSES[levelFor(day.questionsAnswered)]}`}
+                    className={`size-6 shrink-0 rounded-[4px] ${LEVEL_CLASSES[levelFor(day.questionsAnswered)]}`}
                   />
                 ))}
               </div>

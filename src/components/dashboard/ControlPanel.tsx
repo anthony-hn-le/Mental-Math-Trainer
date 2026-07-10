@@ -12,7 +12,7 @@ import { SessionSettings } from "./SessionSettings";
 
 export function ControlPanel() {
   const router = useRouter();
-  const durationSeconds = useConfigStore((s) => s.durationSeconds);
+  const durationMinutes = useConfigStore((s) => s.durationMinutes);
   const questionCount = useConfigStore((s) => s.questionCount);
   // Subscribe to each primitive slice toQuestionConfig() reads, so this
   // re-renders when a sibling (OperationToggles, SessionSettings) changes
@@ -37,7 +37,7 @@ export function ControlPanel() {
 
   const handleStart = () => {
     if (!canStart) return;
-    startSession(questionConfig, durationSeconds * 1000, questionCount);
+    startSession(questionConfig, durationMinutes * 60 * 1000, questionCount);
     router.push("/train");
   };
 
