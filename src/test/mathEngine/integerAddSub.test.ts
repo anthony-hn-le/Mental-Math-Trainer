@@ -61,4 +61,13 @@ describe("generateIntegerAddSub", () => {
       expect(q.answer).toBe(`${expected}`);
     }
   });
+
+  it("addSubMode restricts to addition-only or subtraction-only", () => {
+    for (let i = 0; i < 200; i++) {
+      const addOnly = generateIntegerAddSub(Math.random, { add: true, subtract: false });
+      expect(addOnly.prompt).toContain("+");
+      const subOnly = generateIntegerAddSub(Math.random, { add: false, subtract: true });
+      expect(subOnly.prompt).toContain("-");
+    }
+  });
 });

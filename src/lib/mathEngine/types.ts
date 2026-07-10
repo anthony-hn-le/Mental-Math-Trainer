@@ -13,6 +13,14 @@ export type Difficulty = "easy" | "medium" | "hard";
 
 export type QuestionType = "open" | "mcq";
 
+/** Restricts the `*-add-sub` generators to addition only, subtraction only, or both (default). */
+export interface AddSubMode {
+  add: boolean;
+  subtract: boolean;
+}
+
+export const DEFAULT_ADD_SUB_MODE: AddSubMode = { add: true, subtract: true };
+
 /**
  * `difficulty` is reserved for a future dashboard control. The weighted-tier
  * distributions implemented in `generators/` are the default/medium behavior;
@@ -23,6 +31,7 @@ export interface QuestionConfig {
   questionType: QuestionType;
   mcqChoiceCount?: 3 | 4 | 5;
   difficulty?: Difficulty;
+  addSubMode?: AddSubMode;
 }
 
 export interface Question {

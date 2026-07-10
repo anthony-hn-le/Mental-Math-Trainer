@@ -1,8 +1,9 @@
-import type { Question, RngFn } from "../types";
+import type { AddSubMode, Question, RngFn } from "../types";
+import { DEFAULT_ADD_SUB_MODE } from "../types";
 import { Fraction } from "../fraction";
 
-export function generateFractionAddSub(rng: RngFn = Math.random): Question {
-  const isAdd = rng() < 0.5;
+export function generateFractionAddSub(rng: RngFn = Math.random, addSubMode: AddSubMode = DEFAULT_ADD_SUB_MODE): Question {
+  const isAdd = addSubMode.add && addSubMode.subtract ? rng() < 0.5 : addSubMode.add;
   const useCommonDenominator = rng() < 0.3;
 
   const denA = 2 + Math.floor(rng() * 11); // 2-12

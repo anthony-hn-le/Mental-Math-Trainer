@@ -1,4 +1,5 @@
 import type { OperationKey, Question, QuestionConfig, RngFn } from "./types";
+import { DEFAULT_ADD_SUB_MODE } from "./types";
 import { generateIntegerAddSub } from "./generators/integerAddSub";
 import { generateIntegerMultiply } from "./generators/integerMultiply";
 import { generateIntegerDivide } from "./generators/integerDivide";
@@ -10,17 +11,29 @@ import { generateFractionMultiply } from "./generators/fractionMultiply";
 import { generateFractionConversion } from "./generators/fractionConversion";
 import { generateChoices } from "./mcqDistractors";
 
-const GENERATORS: Record<OperationKey, (rng: RngFn) => Question> = {
-  "integer-add-sub": generateIntegerAddSub,
-  "integer-multiply": generateIntegerMultiply,
-  "integer-divide": generateIntegerDivide,
-  "decimal-add-sub": generateDecimalAddSub,
-  "decimal-multiply": generateDecimalMultiply,
-  "decimal-divide": generateDecimalDivide,
-  "fraction-add-sub": generateFractionAddSub,
-  "fraction-multiply": generateFractionMultiply,
-  "fraction-conversion": generateFractionConversion,
-};
+function generateForOperation(operation: OperationKey, config: QuestionConfig, rng: RngFn): Question {
+  const addSubMode = config.addSubMode ?? DEFAULT_ADD_SUB_MODE;
+  switch (operation) {
+    case "integer-add-sub":
+      return generateIntegerAddSub(rng, addSubMode);
+    case "integer-multiply":
+      return generateIntegerMultiply(rng);
+    case "integer-divide":
+      return generateIntegerDivide(rng);
+    case "decimal-add-sub":
+      return generateDecimalAddSub(rng, addSubMode);
+    case "decimal-multiply":
+      return generateDecimalMultiply(rng);
+    case "decimal-divide":
+      return generateDecimalDivide(rng);
+    case "fraction-add-sub":
+      return generateFractionAddSub(rng, addSubMode);
+    case "fraction-multiply":
+      return generateFractionMultiply(rng);
+    case "fraction-conversion":
+      return generateFractionConversion(rng);
+  }
+}
 
 export function generateQuestion(config: QuestionConfig, rng: RngFn = Math.random): Question {
   if (config.activeOperations.length === 0) {
@@ -28,7 +41,7 @@ export function generateQuestion(config: QuestionConfig, rng: RngFn = Math.rando
   }
 
   const operation = config.activeOperations[Math.floor(rng() * config.activeOperations.length)];
-  const question = GENERATORS[operation](rng);
+  const question = generateForOperation(operation, config, rng);
 
   if (config.questionType === "mcq") {
     const choiceCount = config.mcqChoiceCount ?? 4;

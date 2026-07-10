@@ -1,9 +1,10 @@
-import type { Question, RngFn } from "../types";
+import type { AddSubMode, Question, RngFn } from "../types";
+import { DEFAULT_ADD_SUB_MODE } from "../types";
 import { fromScaledInt } from "../decimalUtils";
 import { randomDecimalOperand, type DecimalOperand } from "../randomUtils";
 
-export function generateDecimalAddSub(rng: RngFn = Math.random): Question {
-  const isAdd = rng() < 0.5;
+export function generateDecimalAddSub(rng: RngFn = Math.random, addSubMode: AddSubMode = DEFAULT_ADD_SUB_MODE): Question {
+  const isAdd = addSubMode.add && addSubMode.subtract ? rng() < 0.5 : addSubMode.add;
   let opA: DecimalOperand = randomDecimalOperand(rng);
   let opB: DecimalOperand = randomDecimalOperand(rng);
 

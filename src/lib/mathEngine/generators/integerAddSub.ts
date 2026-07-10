@@ -1,4 +1,5 @@
-import type { Question, RngFn } from "../types";
+import type { AddSubMode, Question, RngFn } from "../types";
+import { DEFAULT_ADD_SUB_MODE } from "../types";
 import { pickWeighted, type WeightedTier } from "../weightedPick";
 import { randomIntWithDigits } from "../randomUtils";
 
@@ -15,9 +16,9 @@ const TIERS: WeightedTier<[number, number]>[] = [
   { weight: 5, value: [7, 5] },
 ];
 
-export function generateIntegerAddSub(rng: RngFn = Math.random): Question {
+export function generateIntegerAddSub(rng: RngFn = Math.random, addSubMode: AddSubMode = DEFAULT_ADD_SUB_MODE): Question {
   const [digitsA, digitsB] = pickWeighted(TIERS, rng);
-  const isAdd = rng() < 0.5;
+  const isAdd = addSubMode.add && addSubMode.subtract ? rng() < 0.5 : addSubMode.add;
 
   let a = randomIntWithDigits(digitsA, rng);
   let b = randomIntWithDigits(digitsB, rng);
