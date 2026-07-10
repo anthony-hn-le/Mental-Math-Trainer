@@ -12,6 +12,9 @@ const ALL_OPERATIONS: OperationKey[] = [
   "fraction-add-sub",
   "fraction-multiply",
   "fraction-conversion",
+  "percentage-add-sub",
+  "percentage-multiply",
+  "percentage-divide",
 ];
 
 describe("generateQuestion", () => {

@@ -2,6 +2,7 @@
 
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { useConfigStore, type OperationToggles as OperationTogglesState, type NumberTypeToggles } from "@/stores/configStore";
 
 const OPERATION_LABELS: { key: keyof OperationTogglesState; label: string }[] = [
@@ -15,6 +16,7 @@ const NUMBER_TYPE_LABELS: { key: keyof NumberTypeToggles; label: string }[] = [
   { key: "integer", label: "Integers" },
   { key: "decimal", label: "Decimals" },
   { key: "fraction", label: "Fractions" },
+  { key: "percentage", label: "Percentages" },
 ];
 
 export function OperationToggles() {
@@ -24,12 +26,12 @@ export function OperationToggles() {
   const toggleNumberType = useConfigStore((s) => s.toggleNumberType);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
+    <div className="flex flex-col gap-4 xl:flex-row xl:items-stretch">
+      <div className="xl:flex-1">
         <h3 className="mb-2 text-sm font-medium text-muted-foreground">Operations</h3>
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-2 xl:grid-cols-2">
           {OPERATION_LABELS.map(({ key, label }) => (
-            <div key={key} className="flex items-center justify-between">
+            <div key={key} className="flex items-center justify-between gap-2">
               <Label htmlFor={`op-${key}`} className="text-sm font-normal">
                 {label}
               </Label>
@@ -38,11 +40,15 @@ export function OperationToggles() {
           ))}
         </div>
       </div>
-      <div>
+
+      <Separator className="xl:hidden" />
+      <Separator orientation="vertical" className="hidden xl:block" />
+
+      <div className="xl:flex-1">
         <h3 className="mb-2 text-sm font-medium text-muted-foreground">Number Types</h3>
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-1 gap-x-4 gap-y-2 xl:grid-cols-2">
           {NUMBER_TYPE_LABELS.map(({ key, label }) => (
-            <div key={key} className="flex items-center justify-between">
+            <div key={key} className="flex items-center justify-between gap-2">
               <Label htmlFor={`num-${key}`} className="text-sm font-normal">
                 {label}
               </Label>

@@ -29,11 +29,16 @@ export function SessionSettings() {
   const setMcqChoiceCount = useConfigStore((s) => s.setMcqChoiceCount);
 
   const questionCountValue = questionCount === null ? "unlimited" : `${questionCount}`;
+  const questionCountIndex = Math.max(
+    0,
+    QUESTION_COUNT_OPTIONS.findIndex((o) => o.value === questionCountValue),
+  );
+  const questionCountLabel = questionCount === null ? "Unlimited" : `${questionCount} questions`;
 
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <div className="mb-2 flex items-baseline justify-between">
+        <div className="mb-2 flex items-baseline justify-between gap-2">
           <h3 className="text-sm font-medium text-muted-foreground">Duration</h3>
           <span className="font-mono text-sm font-semibold text-primary">
             {durationMinutes} minute{durationMinutes === 1 ? "" : "s"}
@@ -53,21 +58,24 @@ export function SessionSettings() {
       </div>
 
       <div>
-        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Number of Questions</h3>
-        <ToggleGroup
-          value={[questionCountValue]}
-          onValueChange={(values) => {
-            const match = QUESTION_COUNT_OPTIONS.find((o) => o.value === values[0]);
-            if (match) setQuestionCount(match.count);
+        <div className="mb-2 flex items-baseline justify-between gap-2">
+          <h3 className="text-sm font-medium text-muted-foreground">Number of Questions</h3>
+          <span className="font-mono text-sm font-semibold text-primary">{questionCountLabel}</span>
+        </div>
+        <Slider
+          value={[questionCountIndex]}
+          min={0}
+          max={QUESTION_COUNT_OPTIONS.length - 1}
+          step={1}
+          onValueChange={(value) => {
+            const index = Array.isArray(value) ? value[0] : value;
+            setQuestionCount(QUESTION_COUNT_OPTIONS[index].count);
           }}
-          className="flex-wrap"
-        >
-          {QUESTION_COUNT_OPTIONS.map((o) => (
-            <ToggleGroupItem key={o.value} value={o.value} variant="outline" size="sm">
-              {o.label}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
+        />
+        <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+          <span>20</span>
+          <span>∞</span>
+        </div>
       </div>
 
       <div>
@@ -78,6 +86,7 @@ export function SessionSettings() {
             const next = values[0];
             if (next === "open" || next === "mcq") setQuestionType(next);
           }}
+          className="w-full"
         >
           <ToggleGroupItem value="open" variant="outline" className="flex-1">
             Open

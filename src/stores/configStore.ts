@@ -15,6 +15,7 @@ export interface NumberTypeToggles {
   integer: boolean;
   decimal: boolean;
   fraction: boolean;
+  percentage: boolean;
 }
 
 interface ConfigState {
@@ -39,7 +40,7 @@ export const useConfigStore = create<ConfigState>()(
   persist(
     (set, get) => ({
       operations: { add: true, subtract: true, multiply: true, divide: true },
-      numberTypes: { integer: true, decimal: false, fraction: false },
+      numberTypes: { integer: true, decimal: false, fraction: false, percentage: false },
       durationMinutes: 1,
       questionCount: null,
       questionType: "open",
@@ -74,6 +75,11 @@ export const useConfigStore = create<ConfigState>()(
           // fill-in-the-blank conversion questions (e.g. "20 x ? = 4"), which
           // are structurally division problems.
           if (operations.divide) activeOperations.push("fraction-conversion");
+        }
+        if (numberTypes.percentage) {
+          if (operations.add || operations.subtract) activeOperations.push("percentage-add-sub");
+          if (operations.multiply) activeOperations.push("percentage-multiply");
+          if (operations.divide) activeOperations.push("percentage-divide");
         }
 
         return {

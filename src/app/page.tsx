@@ -1,4 +1,5 @@
 import { TopBar } from "@/components/shared/TopBar";
+import { InstructionsBanner } from "@/components/shared/InstructionsBanner";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { ActivityGrid } from "@/components/dashboard/ActivityGrid";
 import { PerformanceStats } from "@/components/dashboard/PerformanceStats";
@@ -9,6 +10,7 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <TopBar />
+      <InstructionsBanner />
       <DashboardLayout
         left={
           <>

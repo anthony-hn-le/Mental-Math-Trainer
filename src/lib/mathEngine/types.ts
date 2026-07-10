@@ -7,7 +7,10 @@ export type OperationKey =
   | "decimal-divide"
   | "fraction-add-sub"
   | "fraction-multiply"
-  | "fraction-conversion";
+  | "fraction-conversion"
+  | "percentage-add-sub"
+  | "percentage-multiply"
+  | "percentage-divide";
 
 export type Difficulty = "easy" | "medium" | "hard";
 

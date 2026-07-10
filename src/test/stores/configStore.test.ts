@@ -5,7 +5,7 @@ describe("configStore.toQuestionConfig", () => {
   beforeEach(() => {
     useConfigStore.setState({
       operations: { add: true, subtract: true, multiply: true, divide: true },
-      numberTypes: { integer: true, decimal: false, fraction: false },
+      numberTypes: { integer: true, decimal: false, fraction: false, percentage: false },
       questionType: "open",
       mcqChoiceCount: 4,
     });
@@ -24,7 +24,7 @@ describe("configStore.toQuestionConfig", () => {
 
   it("maps fraction 'divide' to fraction-conversion (no dedicated fraction-divide generator)", () => {
     useConfigStore.setState({
-      numberTypes: { integer: false, decimal: false, fraction: true },
+      numberTypes: { integer: false, decimal: false, fraction: true, percentage: false },
       operations: { add: false, subtract: false, multiply: false, divide: true },
     });
     const config = useConfigStore.getState().toQuestionConfig();
@@ -32,7 +32,7 @@ describe("configStore.toQuestionConfig", () => {
   });
 
   it("combines multiple active number types", () => {
-    useConfigStore.setState({ numberTypes: { integer: true, decimal: true, fraction: false } });
+    useConfigStore.setState({ numberTypes: { integer: true, decimal: true, fraction: false, percentage: false } });
     const config = useConfigStore.getState().toQuestionConfig();
     expect(config.activeOperations).toContain("integer-add-sub");
     expect(config.activeOperations).toContain("decimal-add-sub");
@@ -40,10 +40,20 @@ describe("configStore.toQuestionConfig", () => {
 
   it("produces an empty activeOperations list when everything is off", () => {
     useConfigStore.setState({
-      numberTypes: { integer: false, decimal: false, fraction: false },
+      numberTypes: { integer: false, decimal: false, fraction: false, percentage: false },
     });
     const config = useConfigStore.getState().toQuestionConfig();
     expect(config.activeOperations).toEqual([]);
+  });
+
+  it("includes all percentage operations when percentage is the only active number type", () => {
+    useConfigStore.setState({
+      numberTypes: { integer: false, decimal: false, fraction: false, percentage: true },
+    });
+    const config = useConfigStore.getState().toQuestionConfig();
+    expect(config.activeOperations.sort()).toEqual(
+      ["percentage-add-sub", "percentage-divide", "percentage-multiply"].sort(),
+    );
   });
 
   it("only sets mcqChoiceCount when questionType is mcq", () => {

@@ -9,6 +9,9 @@ import { generateDecimalDivide } from "./generators/decimalDivide";
 import { generateFractionAddSub } from "./generators/fractionAddSub";
 import { generateFractionMultiply } from "./generators/fractionMultiply";
 import { generateFractionConversion } from "./generators/fractionConversion";
+import { generatePercentageAddSub } from "./generators/percentageAddSub";
+import { generatePercentageMultiply } from "./generators/percentageMultiply";
+import { generatePercentageDivide } from "./generators/percentageDivide";
 import { generateChoices } from "./mcqDistractors";
 
 function generateForOperation(operation: OperationKey, config: QuestionConfig, rng: RngFn): Question {
@@ -32,6 +35,12 @@ function generateForOperation(operation: OperationKey, config: QuestionConfig, r
       return generateFractionMultiply(rng);
     case "fraction-conversion":
       return generateFractionConversion(rng);
+    case "percentage-add-sub":
+      return generatePercentageAddSub(rng, addSubMode);
+    case "percentage-multiply":
+      return generatePercentageMultiply(rng);
+    case "percentage-divide":
+      return generatePercentageDivide(rng);
   }
 }
 
@@ -64,3 +73,6 @@ export * from "./generators/decimalDivide";
 export * from "./generators/fractionAddSub";
 export * from "./generators/fractionMultiply";
 export * from "./generators/fractionConversion";
+export * from "./generators/percentageAddSub";
+export * from "./generators/percentageMultiply";
+export * from "./generators/percentageDivide";
