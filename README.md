@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mental Math Trainer
 
-## Getting Started
+A Tradermath-inspired mental arithmetic trainer for quant/trading-interview-style drills — timed sessions with configurable operations, number types, and question formats, scored on speed and accuracy.
 
-First, run the development server:
+## Stack
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · shadcn/ui · Zustand · Vitest
+
+## Features
+
+- **Realistic quant-assessment number distributions** — not uniform random. Integer add/sub uses 10 weighted digit-count tiers (2-digit through 7-digit), multiplication favors "easy" 2x2 pairs and near-square hard pairs, division always resolves cleanly, decimals use exact scaled-integer arithmetic (no float drift), and fractions are always strictly reduced/improper (never mixed numbers). See `src/lib/mathEngine/` and its 80+ Vitest unit tests.
+- **Configurable sessions** — toggle Addition/Subtraction/Multiplication/Division and Integer/Decimal/Fraction independently, 1 or 10 minute duration, 20-120 questions (or unlimited), Open or Multiple Choice answers. Duration and question count both apply — a session ends at whichever limit is hit first.
+- **Keyboard-first** — typing the exact correct answer auto-submits (no Enter needed) in Open mode; digit keys 1-5 select an MCQ option.
+- **Guest-mode progress tracking** — a GitHub-style activity grid, lifetime stats, and last-session results, all persisted to `localStorage`. No account required.
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev       # http://localhost:3000
+npm test          # Vitest suite for the math engine
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Architecture notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/lib/mathEngine/` — pure, dependency-free question generators. `generateQuestion(config, rng?)` is the single entry point; each generator takes an injectable RNG for deterministic testing.
+- `src/lib/stats/statsRepository.ts` — the seam for a future authenticated/DB-backed persistence layer (NextAuth + Prisma + Supabase Postgres). Not implemented in this MVP; `localStorageStatsRepository.ts` is the only implementation today, and `src/stores/statsStore.ts` depends only on the interface.
+- `src/stores/` — Zustand: `configStore` (persisted dashboard toggles), `statsStore` (reactive cache over `StatsRepository`), `sessionStore` (ephemeral active-session runtime).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See `CLAUDE.md` for more detail on these decisions.
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Zero-config Vercel deploy — no `vercel.json` needed.

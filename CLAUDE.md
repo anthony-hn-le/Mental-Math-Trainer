@@ -25,13 +25,18 @@ The seam for that future work is `src/lib/stats/statsRepository.ts` — a `Stats
 - **Subtraction never goes negative** — both integer and fraction subtraction generators swap operands to keep the result ≥ 0. One-line change in the relevant generator if negative results are ever wanted.
 - **Decimal arithmetic uses scaled integers**, not `parseFloat`, to avoid float drift (`0.1 + 0.2` style bugs) — see `src/lib/mathEngine/decimalUtils.ts`.
 - `QuestionConfig.difficulty` exists in the type for forward-compat but is **not wired to any dashboard control** in this MVP — the spec's fixed weighted-tier percentages are the default/medium behavior.
+- **Independent Add/Subtract toggles**: the math engine's 9 `OperationKey`s bundle add and subtract into one generator per number type (`integer-add-sub`, etc.), but the dashboard exposes them as separate switches per the spec. `QuestionConfig.addSubMode: { add, subtract }` threads through the three `*-add-sub` generators (default: both `true`, i.e. the original 50/50 mix) so unchecking one restricts to the other. `configStore.toQuestionConfig()` derives this from the toggle state.
+- **Fractions have no dedicated divide generator** — the spec's third fraction category is "conversions/fill-in-the-blank" (`fractionConversion.ts`), not division. The dashboard's "Division" toggle maps to `fraction-conversion` when Fractions is active, since those blank-multiply questions are structurally division problems.
+
+## Known gotchas
+- **Deriving store state in a component: subscribe to primitives, not a fresh derived object.** `ControlPanel.tsx` originally did `useConfigStore((s) => s.toQuestionConfig())` to keep the launched config in sync with sibling toggles (`OperationToggles`, `SessionSettings`). Two failure modes in order: (1) selecting the bare `toQuestionConfig` function meant its identity never changes, so the component never re-rendered when siblings changed `operations`/`numberTypes`/`questionType` — the Start button silently launched a stale config (e.g. picking Multiple Choice still started an Open session). (2) The fix-that-wasn't — calling `toQuestionConfig()` *inside* the selector — returns a brand-new object every call, and zustand's default equality is reference-based, so it looked "changed" on every render: infinite render loop. The actual fix: subscribe to the individual primitive slices (`operations`, `numberTypes`, `questionType`, `mcqChoiceCount`) and derive the config with `useMemo` keyed on them.
 
 ## Structure
 - `src/app/page.tsx` — dashboard ("/"), 3-column layout
 - `src/app/train/` — full-bleed training session route (own bare `layout.tsx`, no dashboard chrome)
 - `src/lib/mathEngine/` — pure question generator (types, `Fraction`, `decimalUtils`, `weightedPick`, `checkAnswer`, per-operation generators) — see unit tests in `src/test/mathEngine/`
 - `src/lib/stats/` — `StatsRepository` interface + guest localStorage implementation
-- `src/stores/` — Zustand: `configStore` (dashboard toggles, persisted), `statsStore` (guest stats, persisted, wraps `StatsRepository`), `sessionStore` (ephemeral active-session runtime state)
+- `src/stores/` — Zustand: `configStore` (dashboard toggles, persisted via `zustand/middleware`'s `persist`), `statsStore` (reactive cache wrapping `StatsRepository` — deliberately *not* using `persist`, since the repository itself owns the actual `localStorage` I/O; call `hydrate()` once on mount, see `StatsHydrator.tsx`), `sessionStore` (ephemeral active-session runtime state, no persistence)
 - `src/components/dashboard/`, `src/components/training/`, `src/components/ui/` (shadcn primitives), `src/components/shared/`
 
 ## Known gaps / placeholders
