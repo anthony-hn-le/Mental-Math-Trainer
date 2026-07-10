@@ -1,0 +1,66 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { useSessionStore } from "@/stores/sessionStore";
+import type { Question } from "@/lib/mathEngine/types";
+
+interface MCQAnswerInputProps {
+  question: Question;
+}
+
+const FLASH_DURATION_MS = 250;
+
+/** Render with `key={question.id}` from the parent so selection state resets per question. */
+export function MCQAnswerInput({ question }: MCQAnswerInputProps) {
+  const submitAnswer = useSessionStore((s) => s.submitAnswer);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const choices = question.choices ?? [];
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      const num = Number(e.key);
+      if (Number.isInteger(num) && num >= 1 && num <= choices.length) {
+        handleSelect(num - 1);
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [choices.length, selectedIndex]);
+
+  function handleSelect(index: number) {
+    if (selectedIndex !== null) return; // already answered this question
+    setSelectedIndex(index);
+    window.setTimeout(() => submitAnswer(choices[index]), FLASH_DURATION_MS);
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      {choices.map((choice, index) => {
+        const isSelected = selectedIndex === index;
+        const isCorrect = choice === question.answer;
+        const showFeedback = selectedIndex !== null && (isSelected || isCorrect);
+
+        return (
+          <Button
+            key={choice}
+            variant="outline"
+            size="lg"
+            disabled={selectedIndex !== null}
+            onClick={() => handleSelect(index)}
+            className={cn(
+              "h-14 justify-between font-mono text-lg",
+              showFeedback && isCorrect && "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400",
+              showFeedback && isSelected && !isCorrect && "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400",
+            )}
+          >
+            <span>{choice}</span>
+            <span className="text-xs text-muted-foreground">{index + 1}</span>
+          </Button>
+        );
+      })}
+    </div>
+  );
+}
