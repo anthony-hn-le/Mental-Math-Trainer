@@ -3,7 +3,6 @@
 import { Info } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
 import { useConfigStore, type QuestionCountOption } from "@/stores/configStore";
 
 const QUESTION_COUNT_OPTIONS: { value: string; label: string; count: QuestionCountOption }[] = [
@@ -118,24 +117,15 @@ export function SessionSettings() {
         </div>
       )}
 
-      {/* Always mounted with a fixed min-height (sized for its worst-case 2-line
-          wrap) and only its visibility toggled — conditionally mounting this
-          made the whole panel resize whenever Fractions/Question Type changed. */}
-      <div
-        aria-hidden={!showFractionNote}
-        className={cn(
-          "flex min-h-12 items-start gap-1.5 rounded-md border px-2.5 py-1.5 text-xs transition-opacity",
-          showFractionNote
-            ? "border-blue-500/20 bg-blue-500/10 text-blue-700 opacity-100 dark:text-blue-300"
-            : "border-transparent opacity-0",
-        )}
-      >
-        <Info className="mt-0.5 size-3.5 shrink-0" />
-        <span>
-          Fractions: answer as a reduced improper fraction (e.g.{" "}
-          <code className="rounded bg-blue-500/15 px-1">8/3</code>, not 2 2/3).
-        </span>
-      </div>
+      {showFractionNote && (
+        <div className="flex items-start gap-1.5 rounded-md border border-blue-500/20 bg-blue-500/10 px-2.5 py-1.5 text-xs text-blue-700 dark:text-blue-300">
+          <Info className="mt-0.5 size-3.5 shrink-0" />
+          <span>
+            Fractions: answer as a reduced improper fraction (e.g.{" "}
+            <code className="rounded bg-blue-500/15 px-1">8/3</code>, not 2 2/3).
+          </span>
+        </div>
+      )}
     </div>
   );
 }
