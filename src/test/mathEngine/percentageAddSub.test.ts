@@ -9,14 +9,14 @@ describe("generatePercentageAddSub", () => {
     }
   });
 
-  it("generates correct arithmetic and a percent-formatted prompt", () => {
+  it("generates correct arithmetic, with the answer itself formatted as a percentage", () => {
     for (let i = 0; i < 500; i++) {
       const q = generatePercentageAddSub();
       const [a, b] = q.metadata.operands as number[];
       const isAdd = q.prompt.includes("+");
       const expected = isAdd ? a + b : a - b;
       expect(q.answerValue).toBe(expected);
-      expect(q.answer).toBe(`${expected}`);
+      expect(q.answer).toBe(`${expected}%`);
       expect(q.prompt).toContain("%");
     }
   });

@@ -31,13 +31,20 @@ export function generateChoices(question: Question, choiceCount: number, rng: Rn
 }
 
 function perturbNumeric(correctStr: string, value: number | undefined, attemptSeed: number, rng: RngFn): string {
-  const base = value ?? parseFloat(correctStr);
-  const decimalPlaces = (correctStr.split(".")[1] || "").length;
+  // Percentage answers carry a "%" suffix (e.g. "87%") — strip it for the
+  // arithmetic and reattach it so distractors display consistently with the
+  // correct choice, rather than showing a bare "84" next to "87%".
+  const isPercent = correctStr.endsWith("%");
+  const numericStr = isPercent ? correctStr.slice(0, -1) : correctStr;
+
+  const base = value ?? parseFloat(numericStr);
+  const decimalPlaces = (numericStr.split(".")[1] || "").length;
   const unit = decimalPlaces > 0 ? 1 / 10 ** decimalPlaces : 1;
   const growth = attemptSeed + Math.floor(rng() * 9) + 1;
   const offset = unit * growth * (rng() < 0.5 ? -1 : 1);
   const perturbed = base + offset;
-  return decimalPlaces > 0 ? perturbed.toFixed(decimalPlaces) : `${Math.round(perturbed)}`;
+  const formatted = decimalPlaces > 0 ? perturbed.toFixed(decimalPlaces) : `${Math.round(perturbed)}`;
+  return isPercent ? `${formatted}%` : formatted;
 }
 
 function perturbFraction(correctStr: string, attemptSeed: number, rng: RngFn): string {

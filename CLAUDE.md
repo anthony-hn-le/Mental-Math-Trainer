@@ -2,7 +2,7 @@
 
 # Project: Mental Math Trainer
 
-Tradermath-inspired mental arithmetic trainer for quant/trading-interview-style drills. Standalone project — not part of the `portfolio/` repo. Live at https://mental-math-trainer-dun.vercel.app/, GitHub `anthony-hn-le/Mental-Math-Trainer` — not yet linked from `portfolio/src/data/projects.ts`.
+Tradermath-inspired mental arithmetic trainer for quant/trading-interview-style drills. Standalone project — not part of the `portfolio/` repo. Live at https://anthony-mental-math-trainer.vercel.app/, GitHub `anthony-hn-le/Mental-Math-Trainer` — not yet linked from `portfolio/src/data/projects.ts`.
 
 ## Stack (as actually installed)
 - Next.js 16.2.10, App Router, React 19.2.4, TypeScript ^5

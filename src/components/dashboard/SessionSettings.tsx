@@ -117,17 +117,12 @@ export function SessionSettings() {
       )}
 
       {questionType === "open" && numberTypes.fraction && (
-        <div className="flex gap-2 rounded-lg border border-blue-500/20 bg-blue-500/10 p-3 text-sm text-blue-700 dark:text-blue-300">
-          <Info className="mt-0.5 size-4 shrink-0" />
-          <div>
-            <p className="font-medium">Fraction answer format</p>
-            <p className="mt-1 text-blue-700/90 dark:text-blue-300/90">
-              If your answer is a fraction, write it as a reduced improper fraction. Do not use mixed numbers
-              (e.g., instead of 2 2/3, write <code className="rounded bg-blue-500/15 px-1">8/3</code>). Always
-              reduce fractions to lowest terms (e.g., <code className="rounded bg-blue-500/15 px-1">6/18</code>{" "}
-              → <code className="rounded bg-blue-500/15 px-1">1/3</code>).
-            </p>
-          </div>
+        <div className="flex items-center gap-1.5 rounded-md border border-blue-500/20 bg-blue-500/10 px-2.5 py-1.5 text-xs text-blue-700 dark:text-blue-300">
+          <Info className="size-3.5 shrink-0" />
+          <span>
+            Fractions: answer as a reduced improper fraction (e.g.{" "}
+            <code className="rounded bg-blue-500/15 px-1">8/3</code>, not 2 2/3).
+          </span>
         </div>
       )}
     </div>

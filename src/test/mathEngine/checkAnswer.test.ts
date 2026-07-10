@@ -56,4 +56,11 @@ describe("checkAnswer", () => {
   it("rejects non-numeric garbage", () => {
     expect(checkAnswer(makeQuestion({ answer: "2", answerValue: 2 }), "abc")).toBe(false);
   });
+
+  it("accepts a plain number for a percentage answer formatted with a '%' suffix", () => {
+    const q = makeQuestion({ operation: "percentage-add-sub", answer: "87%", answerValue: 87 });
+    expect(checkAnswer(q, "87")).toBe(true);
+    expect(checkAnswer(q, "87%")).toBe(true);
+    expect(checkAnswer(q, "86")).toBe(false);
+  });
 });

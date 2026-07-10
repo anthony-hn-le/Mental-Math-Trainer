@@ -27,7 +27,11 @@ export function generatePercentageAddSub(
     id: crypto.randomUUID(),
     operation: "percentage-add-sub",
     prompt,
-    answer: `${answerValue}`,
+    // The result of adding/subtracting two percentages is itself a percentage
+    // (unlike multiply/divide, which produce a plain quantity) — checkAnswer's
+    // numeric comparison uses answerValue directly, so a typed "87" (no "%")
+    // still matches; the suffix here is purely for canonical/MCQ display.
+    answer: `${answerValue}%`,
     answerValue,
     metadata: { tier: isAdd ? "add" : "sub", operands: [a, b] },
   };

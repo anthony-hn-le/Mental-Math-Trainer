@@ -52,13 +52,12 @@ export function MCQAnswerInput({ question }: MCQAnswerInputProps) {
             onClick={() => handleSelect(index)}
             aria-label={`Option ${index + 1}: ${choice}`}
             className={cn(
-              "relative h-16 flex-1 font-mono text-lg",
+              "h-16 flex-1 font-mono text-lg",
               showFeedback && isCorrect && "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400",
               showFeedback && isSelected && !isCorrect && "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400",
             )}
           >
             {choice}
-            <span className="absolute right-1.5 bottom-1 text-[10px] text-muted-foreground">{index + 1}</span>
           </Button>
         );
       })}
