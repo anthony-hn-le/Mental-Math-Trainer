@@ -4,7 +4,7 @@ import type { StatsRepository } from "@/lib/stats/statsRepository";
 import type { DayActivity, LifetimeStats, SessionResult } from "@/lib/stats/types";
 
 const repository: StatsRepository = localStorageStatsRepository;
-const ACTIVITY_WINDOW_DAYS = 21; // 3x7 grid
+const ACTIVITY_WINDOW_DAYS = 30; // 3x10 grid
 
 interface StatsState {
   hasHydrated: boolean;

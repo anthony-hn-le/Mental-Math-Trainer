@@ -26,8 +26,8 @@ export function OperationToggles() {
   const toggleNumberType = useConfigStore((s) => s.toggleNumberType);
 
   return (
-    <div className="flex flex-col gap-4 xl:flex-row xl:items-stretch">
-      <div className="xl:flex-1">
+    <div className="flex flex-col gap-4">
+      <div>
         <h3 className="mb-2 text-sm font-medium text-muted-foreground">Operations</h3>
         <div className="grid grid-cols-1 gap-x-4 gap-y-2 xl:grid-cols-2">
           {OPERATION_LABELS.map(({ key, label }) => (
@@ -41,10 +41,10 @@ export function OperationToggles() {
         </div>
       </div>
 
-      <Separator className="xl:hidden" />
-      <Separator orientation="vertical" className="hidden xl:block" />
+      <Separator />
 
-      <div className="xl:flex-1">
+      {/* Always stacked below Operations — never side-by-side, at any width. */}
+      <div>
         <h3 className="mb-2 text-sm font-medium text-muted-foreground">Number Types</h3>
         <div className="grid grid-cols-1 gap-x-4 gap-y-2 xl:grid-cols-2">
           {NUMBER_TYPE_LABELS.map(({ key, label }) => (
