@@ -6,6 +6,7 @@ import { ActivityGrid } from "@/components/dashboard/ActivityGrid";
 import { PerformanceStats } from "@/components/dashboard/PerformanceStats";
 import { ControlPanel } from "@/components/dashboard/ControlPanel";
 import { LastResultsWidget } from "@/components/dashboard/LastResultsWidget";
+import { ScoreTrend } from "@/components/dashboard/ScoreTrend";
 
 export default function Home() {
   return (
@@ -20,7 +21,12 @@ export default function Home() {
           </>
         }
         middle={<ControlPanel />}
-        right={<LastResultsWidget />}
+        right={
+          <>
+            <LastResultsWidget />
+            <ScoreTrend />
+          </>
+        }
       />
       <Footer />
     </div>

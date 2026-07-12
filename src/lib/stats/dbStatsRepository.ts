@@ -38,6 +38,10 @@ export const dbStatsRepository = {
     return getJson<SessionResult | null>("/api/scores/last");
   },
 
+  getRecentSessions(limit: number): Promise<SessionResult[]> {
+    return getJson<SessionResult[]>(`/api/scores?limit=${limit}`);
+  },
+
   getActivity(days: number): Promise<DayActivity[]> {
     const tzOffsetMinutes = new Date().getTimezoneOffset();
     return getJson<DayActivity[]>(`/api/scores/activity?days=${days}&tzOffsetMinutes=${tzOffsetMinutes}`);

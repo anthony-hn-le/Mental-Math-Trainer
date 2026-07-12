@@ -9,6 +9,8 @@ import type { DayActivity, LifetimeStats, SessionResult } from "./types";
 export interface StatsRepository {
   recordSession(result: SessionResult): void | Promise<void>;
   getLastSession(): SessionResult | null | Promise<SessionResult | null>;
+  /** Newest-first, for the homepage score trend chart. */
+  getRecentSessions(limit: number): SessionResult[] | Promise<SessionResult[]>;
   getActivity(days: number): DayActivity[] | Promise<DayActivity[]>;
   getLifetimeStats(): LifetimeStats | Promise<LifetimeStats>;
 }

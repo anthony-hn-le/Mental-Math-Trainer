@@ -13,7 +13,7 @@ Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · shadcn/u
 - **Realistic quant-assessment number distributions** — not uniform random. Integer add/sub uses 10 weighted digit-count tiers (2-digit through 7-digit), multiplication favors "easy" 2x2 pairs and near-square hard pairs, division always resolves cleanly, decimals use exact scaled-integer arithmetic (no float drift), and fractions are always strictly reduced/improper (never mixed numbers). See `src/lib/mathEngine/` and its 95+ Vitest unit tests.
 - **Configurable sessions** — toggle Addition/Subtraction/Multiplication/Division and Integer/Decimal/Fraction/Percentage independently, 1-10 minute duration, 20-120 questions (or unlimited), Open or Multiple Choice answers. Duration and question count both apply — a session ends at whichever limit is hit first.
 - **Keyboard-first** — typing the exact correct answer auto-submits (no Enter needed) in Open mode; digit keys 1-5 select an MCQ option.
-- **Progress tracking, guest or signed in** — a GitHub-style activity grid, lifetime stats, and last-session results. Works immediately with no account (persisted to `localStorage`). Sign in with Google to persist the same stats to a database instead, and unlock a `/history` dashboard with a score-over-time chart and a full per-session log.
+- **Progress tracking, guest or signed in** — a GitHub-style activity grid, lifetime stats, last-session results, and a recent score trend chart, all right on the homepage. Works immediately with no account (persisted to `localStorage`). Sign in with Google to persist the same stats to a database instead — same dashboard, same components, just backed by Postgres.
 
 ## Development
 

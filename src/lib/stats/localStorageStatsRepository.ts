@@ -58,6 +58,10 @@ export const localStorageStatsRepository = {
     return readData().sessions[0] ?? null;
   },
 
+  getRecentSessions(limit: number): SessionResult[] {
+    return readData().sessions.slice(0, limit);
+  },
+
   getActivity(days: number): DayActivity[] {
     const data = readData();
     const today = new Date();

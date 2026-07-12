@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -45,7 +44,6 @@ export function AuthButton() {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>{name ?? email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem render={<Link href="/history">History</Link>} />
         <DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
