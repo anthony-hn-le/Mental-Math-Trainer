@@ -1,4 +1,5 @@
 import { ThemeToggle } from "./ThemeToggle";
+import { AuthButton } from "./AuthButton";
 
 const PERSONAL_SITE_URL = "https://anthony-le.vercel.app/";
 
@@ -19,8 +20,9 @@ export function TopBar() {
           </a>
         </div>
         <span className="text-center text-sm font-semibold tracking-tight">Mental Math Trainer</span>
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-3">
           <ThemeToggle />
+          <AuthButton />
         </div>
       </div>
     </header>

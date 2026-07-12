@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { StatsHydrator } from "@/components/shared/StatsHydrator";
@@ -27,10 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <StatsHydrator />
-          {children}
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+            <StatsHydrator />
+            {children}
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
