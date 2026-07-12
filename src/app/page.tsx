@@ -7,6 +7,7 @@ import { PerformanceStats } from "@/components/dashboard/PerformanceStats";
 import { ControlPanel } from "@/components/dashboard/ControlPanel";
 import { LastResultsWidget } from "@/components/dashboard/LastResultsWidget";
 import { ScoreTrend } from "@/components/dashboard/ScoreTrend";
+import { SpeedTrend } from "@/components/dashboard/SpeedTrend";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
           <>
             <LastResultsWidget />
             <ScoreTrend />
+            <SpeedTrend />
           </>
         }
       />
