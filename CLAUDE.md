@@ -16,7 +16,7 @@ Tradermath-inspired mental arithmetic trainer for quant/trading-interview-style 
 
 Per `AGENTS.md`: this Next.js version has real breaking changes vs. training data — check `node_modules/next/dist/docs/` before writing App Router code you haven't verified against this version.
 
-## Auth + DB-backed history (Phase 2, now built)
+## Auth + DB-backed history
 Google sign-in is optional — guest mode still works exactly as before, with stats persisted to `localStorage` via Zustand's `persist` middleware. Signing in switches persistence to Postgres (Supabase) via Prisma; signing out reverts to the (separate, untouched) guest localStorage stats. No migration of guest history into the DB on sign-in — deliberately a fresh start.
 
 The seam this was built on: `src/lib/stats/statsRepository.ts` is a `StatsRepository` interface (`recordSession`, `getLastSession`, `getActivity`, `getLifetimeStats`) with two implementations — `localStorageStatsRepository.ts` (guest) and `dbStatsRepository.ts` (signed-in, calls the `/api/scores*` routes). `src/stores/statsStore.ts` holds the active repository in state (`setRepository`); `src/components/shared/StatsHydrator.tsx` is the one place that knows about auth — it watches `useSession()` and swaps the repository + re-hydrates on status change. No other component changed to support this.
