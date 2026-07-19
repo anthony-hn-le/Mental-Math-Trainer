@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local Claude Code guidance, not for the public repo
+CLAUDE.md
+docs/agents/
