@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -42,9 +43,11 @@ export function AuthButton() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>{name ?? email}</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>{name ?? email}</DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
